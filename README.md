@@ -46,7 +46,7 @@ flowchart LR
     style CleanConnect fill:#C8E6C9
 ```
 
-## [DRAFT] Diagram of proposed data structure changes to **Module 4: Where you live and work**
+## [DRAFT] Diagram of proposed data structure changes to *Module 4: Where you live and work*
 
 ```mermaid
 erDiagram
