@@ -45,3 +45,59 @@ flowchart LR
     style FlatConnect fill:#FFF9C4
     style CleanConnect fill:#C8E6C9
 ```
+
+## [DRAFT] Diagram of proposed data structure changes to **Module 4: Where you live and work**
+
+```mermaid
+erDiagram
+    PARTICIPANT ||--o{ ADDRESS : ""
+    ADDRESS ||--|| JOB : ""
+    ADDRESS ||--|| SCHOOL : ""
+    ADDRESS }|--|| COMMUTE : ""
+    PARTICIPANT ||--o{ JOB : ""
+    PARTICIPANT ||--o{ SCHOOL : ""
+      PARTICIPANT ||--o{ COMMUTE : ""
+    
+    PARTICIPANT {
+        int connect_id PK
+        str name
+    }
+    
+    ADDRESS {
+        int connect_id PK, FK
+        int address_id PK
+        str address_type
+        int street_number
+        str street_name
+        str city
+        str state
+        int zip
+        float latitude
+        float longitude
+        date start_date
+        date end_date
+    }
+    
+    JOB {
+        int job_id PK
+        int connect_id FK
+        int address_id FK
+        int occupation
+        str employer
+    }
+
+    SCHOOL {
+        int connect_id
+        int school_id
+        str school_name
+    }
+
+    COMMUTE {
+        int connect_id FK, PK
+        int departure_address_id FK, PK
+        int destination_address_id FK, PK
+        str commute_type
+        str commute_days_per_week
+        str commute_time
+    }
+```
