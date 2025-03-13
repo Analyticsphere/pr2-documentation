@@ -1,7 +1,16 @@
 # pr2-documentation
 Documentation and Issue-tracking for the PR2 Data Pipeline.
 
-## Data Flow Diagram: *FlatConnect* --> *CleanConnect*
+- **Issue Tracking:** All [Issues](https://github.com/Analyticsphere/pr2-documentation/issues) will be created in this repo and tracked in the [pr2 GitHub Project](https://github.com/orgs/Analyticsphere/projects/15).
+- **Transformations:** Transformation code will be developed/maintained here: [Analyticsphere/transformation](https://github.com/Analyticsphere/pr2-transformation)
+- **Orchestration:** Airflow DAGs will be developed/maintained here: [Analyticsphere/pr2-orchestration](https://github.com/Analyticsphere/pr2-orchestration)
+
+Core logic of the transformations will be implemented in Python, but the Python code will render SQL which will be executed in BigQuery. 
+## High-level dataflow diagram
+
+<img width="800" alt="pr2_dataflow_diagram" src="https://github.com/user-attachments/assets/3ddaabca-1b1c-467b-8d3d-9c6c181d0d91" />
+
+## Dataflow diagram for cleaning transformations
 
 ```mermaid
 flowchart LR
