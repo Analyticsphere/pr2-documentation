@@ -55,6 +55,55 @@ flowchart LR
     style CleanConnect fill:#C8E6C9
 ```
 
+## [DRAFT] A sketch of a response-centric relational data model for Connect surveys
+
+```mermaid
+ erDiagram
+    PARTICIPANTS {
+        VARCHAR participant_id PK
+        DATE birth_date
+        VARCHAR gender
+        VARCHAR etcetera
+    }
+    SURVEYS {
+        INT survey_id PK
+        VARCHAR survey_name
+        VARCHAR version
+        DATE date_administered
+    }
+    QUESTIONS {
+        INT question_id PK
+        INT survey_id FK
+        VARCHAR question_text
+        VARCHAR question_type
+        VARCHAR question_name
+        BOOLEAN is_loop_question
+        VARCHAR loop_group
+        INT question_sequence
+        INT parent_question_id
+        INT followup_to_option_id
+    }
+    QUESTION_OPTIONS {
+        INT option_id PK
+        INT question_id FK
+        VARCHAR option_text
+    }
+    QUESTION_RESPONSE_OCCURRENCES {
+        INT response_occurrence_id PK
+        VARCHAR participant_id FK
+        INT question_concept_id FK
+        INT response_concept_id FK
+        VARCHAR response_as_value
+        INT loop_iteration
+        TIMESTAMP response_timestamp
+    }
+    
+    PARTICIPANTS ||--o{ QUESTION_RESPONSE_OCCURRENCES : "submits"
+    QUESTIONS ||--o{ QUESTION_RESPONSE_OCCURRENCES : "receives"
+    SURVEYS ||--o{ QUESTIONS : "contains"
+    QUESTIONS ||--o{ QUESTION_OPTIONS : "provides"
+    QUESTION_OPTIONS ||--o{ QUESTION_RESPONSE_OCCURRENCES : "selected in"
+```
 ## [DRAFT] Diagram of proposed data structure changes to *Module 4: Where you live and work*
 
 ```mermaid
