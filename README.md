@@ -119,6 +119,21 @@ flowchart LR
     class mod1_clean,mod2_clean,mod3_clean,mod4_clean,bio_clean,clinical_bio_clean,covid_clean,mouthwash_clean,biospecimen_clean,participants_clean,exp2024_clean,menstrual_clean cleanStyle
 ```
 
+## Transformation Setps
+- clean_columns:
+    - fix naming conventions for loop variables
+    - convert collumn names to lower case
+    - standardize use of version tag, e.g., '_v2', by putting it at the end of the column names
+    - split columns that require splitting
+    - merge columns that need merging 
+- clean_rows:
+    - ensure that binary responses have concept ids for yes/no rather than 0/1
+    - ensure that there are now values that should be singletons that are wrapped in brackets like an array
+- merge_table_versions
+    - join tables that have multiple versions
+    - take care to use coalesce appropriately to combine mutual columns
+    - take care to include columns unique to either source table in the target table
+
 ## [DRAFT] A sketch of a response-centric relational data model for Connect surveys
 
 ```mermaid
