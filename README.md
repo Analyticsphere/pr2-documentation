@@ -14,45 +14,109 @@ Core logic of the transformations will be implemented in Python, but the Python 
 
 ```mermaid
 flowchart LR
- subgraph FlatConnect["FlatConnect"]
-        fc_mod1_v1["module1_v1"]
-        fc_mod1_v2["module1_v2"]
-        fc_mod2_v1["module2_v1"]
-        fc_mod2_v2["module2_v2"]
-        fc_mod3["module_3_v1"]
-        fc_mod4["module_4_v1"]
-        fc_bs["bioSurvey_v1"]
-        fc_c19["covid19Survey_v1"]
-        fc_prom["promis_v1"]
-  end
- subgraph CleanConnect["CleanConnect"]
-        cc_mod1["module1"]
-        cc_mod2["module2"]
-        cc_mod3["module3"]
-        cc_mod4["module4"]
-        cc_bs["bioSurvey"]
-        cc_c19["covid19Survey"]
-        cc_prom["promis"]
-  end
-    fc_mod1_v1 -- coalesce loop vars --> fc_coal_mod1_v1["stg_coalesced_module1_v1"]
-    fc_mod1_v2 -- coalesce loop vars --> fc_coal_mod1_v2["stg_coalesced_module1_v2"]
-    fc_mod2_v1 -- coalesce loop vars --> fc_coal_mod2_v1a["stg_coalesced_module2_v1"]
-    fc_mod2_v2 -- coalesce loop vars --> fc_coal_mod2_v1b["stg_coalesced_module2_v1"]
-    fc_mod3 -- clean --> cc_mod3
-    fc_mod4 -- clean --> cc_mod4
-    merge_mod1["stg_merged_module_1"] -- clean --> cc_mod1
-    merge_mod2["stg_merged_module_2"] -- clean --> cc_mod2
-    fc_coal_mod1_v1 -- merge --> merge_mod1
-    fc_coal_mod1_v2 -- merge --> merge_mod1
-    fc_coal_mod2_v1a -- merge --> merge_mod2
-    fc_coal_mod2_v1b -- merge --> merge_mod2
-    fc_bs -- merge covid variables --> stg_cov19["stg_covid19Survey"]
-    fc_c19 -- merge covid variables --> stg_cov19
-    stg_cov19 -- clean --> cc_c19
-    fc_bs -- "clean non-covid variables" --> cc_bs
-    fc_prom --> cc_prom
-    style FlatConnect fill:#FFF9C4
-    style CleanConnect fill:#C8E6C9
+    %% Define Sources
+    subgraph SourceTables["Source Tables"]
+        mod1_v1["MODULE1_V1"]
+        mod1_v2["MODULE1_V2"]
+        mod2_v1["MODULE2_V1"]
+        mod2_v2["MODULE2_V2"]
+        mod3["MODULE3"]
+        mod4["MODULE4"]
+        bio["BIOSURVEY"]
+        clinical_bio["CLINICALBIOSURVEY"]
+        covid["COVID19SURVEY"]
+        mouthwash["MOUTHWASH"]
+        biospecimen["BIOSPECIMEN"]
+        participants["PARTICIPANTS"]
+        exp2024["EXPERIENCE2024"]
+        menstrual["MENSTRUALSURVEY"]
+    end
+    
+    %% Define Staging
+    subgraph StagingTables["Staging Tables"]
+        %% Cleaned Columns
+        mod1_v1_cc["MODULE1_V1_CLEANED_COLUMNS"]
+        mod1_v2_cc["MODULE1_V2_CLEANED_COLUMNS"]
+        mod2_v1_cc["MODULE2_V1_CLEANED_COLUMNS"]
+        mod2_v2_cc["MODULE2_V2_CLEANED_COLUMNS"]
+        mod3_cc["MODULE3_CLEANED_COLUMNS"]
+        mod4_cc["MODULE4_CLEANED_COLUMNS"]
+        bio_cc["BIOSURVEY_CLEANED_COLUMNS"]
+        clinical_bio_cc["CLINICALBIOSURVEY_CLEANED_COLUMNS"]
+        covid_cc["COVID19SURVEY_CLEANED_COLUMNS"]
+        mouthwash_cc["MOUTHWASH_CLEANED_COLUMNS"]
+        biospecimen_cc["BIOSPECIMEN_CLEANED_COLUMNS"]
+        participants_cc["PARTICIPANTS_CLEANED_COLUMNS"]
+        exp2024_cc["EXPERIENCE2024_CLEANED_COLUMNS"]
+        
+        %% Cleaned Rows
+        mod1_v1_cr["MODULE1_V1_CLEANED_ROWS"]
+        mod1_v2_cr["MODULE1_V2_CLEANED_ROWS"]
+        mod2_v1_cr["MODULE2_V1_CLEANED_ROWS"]
+        mod2_v2_cr["MODULE2_V2_CLEANED_ROWS"]
+    end
+    
+    %% Define Clean Tables
+    subgraph CleanTables["Clean Tables"]
+        mod1_clean["MODULE1"]
+        mod2_clean["MODULE2"]
+        mod3_clean["MODULE3"]
+        mod4_clean["MODULE4"]
+        bio_clean["BIOSURVEY"]
+        clinical_bio_clean["CLINICALBIOSURVEY"]
+        covid_clean["COVID19SURVEY"]
+        mouthwash_clean["MOUTHWASH"]
+        biospecimen_clean["BIOSPECIMEN"]
+        participants_clean["PARTICIPANTS"]
+        exp2024_clean["EXPERIENCE2024"]
+        menstrual_clean["MENSTRUALSURVEY"]
+    end
+    
+    %% Phase 1: Clean Columns
+    mod1_v1 -- "clean_columns" --> mod1_v1_cc
+    mod1_v2 -- "clean_columns" --> mod1_v2_cc
+    mod2_v1 -- "clean_columns" --> mod2_v1_cc
+    mod2_v2 -- "clean_columns" --> mod2_v2_cc
+    mod3 -- "clean_columns" --> mod3_cc
+    mod4 -- "clean_columns" --> mod4_cc
+    bio -- "clean_columns" --> bio_cc
+    clinical_bio -- "clean_columns" --> clinical_bio_cc
+    covid -- "clean_columns" --> covid_cc
+    mouthwash -- "clean_columns" --> mouthwash_cc
+    biospecimen -- "clean_columns" --> biospecimen_cc
+    participants -- "clean_columns" --> participants_cc
+    exp2024 -- "clean_columns" --> exp2024_cc
+    menstrual -- "clean_columns" --> menstrual_clean
+    
+    %% Phase 2: Clean Rows for Tables that need version merging
+    mod1_v1_cc -- "clean_rows" --> mod1_v1_cr
+    mod1_v2_cc -- "clean_rows" --> mod1_v2_cr
+    mod2_v1_cc -- "clean_rows" --> mod2_v1_cr
+    mod2_v2_cc -- "clean_rows" --> mod2_v2_cr
+    
+    %% Phase 2: Clean Rows for Tables that go directly to Clean Tables
+    mod3_cc -- "clean_rows" --> mod3_clean
+    mod4_cc -- "clean_rows" --> mod4_clean
+    bio_cc -- "clean_rows" --> bio_clean
+    clinical_bio_cc -- "clean_rows" --> clinical_bio_clean
+    covid_cc -- "clean_rows" --> covid_clean
+    mouthwash_cc -- "clean_rows" --> mouthwash_clean
+    biospecimen_cc -- "clean_rows" --> biospecimen_clean
+    participants_cc -- "clean_rows" --> participants_clean
+    exp2024_cc -- "clean_rows" --> exp2024_clean
+    
+    %% Phase 3: Merge Table Versions
+    mod1_v1_cr & mod1_v2_cr -- "merge_table_versions" --> mod1_clean
+    mod2_v1_cr & mod2_v2_cr -- "merge_table_versions" --> mod2_clean
+    
+    %% Styling
+    classDef sourceStyle fill:#FFF9C4,stroke:#E6BA20,stroke-width:1px
+    classDef stagingStyle fill:#FFDFBA,stroke:#FF8C00,stroke-width:1px
+    classDef cleanStyle fill:#C8E6C9,stroke:#2E7D32,stroke-width:1px
+    
+    class mod1_v1,mod1_v2,mod2_v1,mod2_v2,mod3,mod4,bio,clinical_bio,covid,mouthwash,biospecimen,participants,exp2024,menstrual sourceStyle
+    class mod1_v1_cc,mod1_v2_cc,mod2_v1_cc,mod2_v2_cc,mod3_cc,mod4_cc,bio_cc,clinical_bio_cc,covid_cc,mouthwash_cc,biospecimen_cc,participants_cc,exp2024_cc,mod1_v1_cr,mod1_v2_cr,mod2_v1_cr,mod2_v2_cr stagingStyle
+    class mod1_clean,mod2_clean,mod3_clean,mod4_clean,bio_clean,clinical_bio_clean,covid_clean,mouthwash_clean,biospecimen_clean,participants_clean,exp2024_clean,menstrual_clean cleanStyle
 ```
 
 ## [DRAFT] A sketch of a response-centric relational data model for Connect surveys
