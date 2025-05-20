@@ -231,7 +231,7 @@ flowchart LR
     class mod1_clean,mod2_clean,mod3_clean,mod4_clean,bio_clean,clinical_bio_clean,covid_clean,mouthwash_clean,biospecimen_clean,participants_clean,exp2024_clean,menstrual_clean cleanStyle
 ```
 
-## Transformation Setps
+## Transformation Steps
 - clean_columns:
     - fix naming conventions for loop variables
     - convert collumn names to lower case
