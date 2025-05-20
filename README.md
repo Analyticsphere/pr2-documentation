@@ -6,6 +6,11 @@ Documentation and Issue-tracking for the PR2 Data Pipeline.
 - **Orchestration:** Airflow DAGs will be developed/maintained here: [Analyticsphere/pr2-orchestration](https://github.com/Analyticsphere/pr2-orchestration)
 
 Core logic of the transformations will be implemented in Python, but the Python code will render SQL which will be executed in BigQuery. 
+
+## First Principles
+
+The PR2 transformation pipeline is built on several core principles that guide its design and implementation:
+
 ## High-level dataflow diagram
 
 <img width="800" alt="pr2_dataflow_diagram" src="https://github.com/user-attachments/assets/3ddaabca-1b1c-467b-8d3d-9c6c181d0d91" />
@@ -17,6 +22,7 @@ Core logic of the transformations will be implemented in Python, but the Python 
 The PR2 transformation architecture is a modern, serverless ETL pipeline built on Google Cloud Platform that transforms Connect data from its raw form to a clean, standardized format for research purposes.
 
 ## Architecture Diagram
+> Note: This currently just includes the cleaning transformations, not-deidentification or 
 
 ```mermaid
 flowchart LR
@@ -41,7 +47,21 @@ flowchart LR
     class bq,gcs secondary
     class source,staging,clean datasets
 ```
+## First Principles
 
+The PR2 transformation pipeline is built on these core principles:
+
+- **Unidirectional data flow**: Raw → clean, PII → de-identified, granular → aggregated
+- **Modularity**: Small, discrete functions optimized for readability over efficiency
+- **Separation of concerns**: Group transformations by type, not by table (e.g., column-level, row/value-level, table-level)
+- **Parallelization**: Process multiple tables simultaneously
+- **Configuration**: Parameterize constants and avoid hardcoding changeable elements
+- **Extensibility**: Design for discovering new requirements, avoid one-off solutions
+- **SQL-first**: Generate SQL in python and execute in BigQuery via client library
+- **Auditiability and data provanence**: Archive SQL in GCS prior to execution for debugging and analyzing data provanance
+- **Serverless**: REST API endpoints for processing. Pass parameters via JSON from orchestrator
+- **Centralized orchestration**: Airflow for dependency management, parallelization, and scheduling
+  
 ## Core Components
 
 ### Cloud Composer (Apache Airflow)
@@ -230,7 +250,7 @@ flowchart LR
     - take care to use coalesce appropriately to combine mutual columns
     - take care to include columns unique to either source table in the target table
 
-## [DRAFT] Diagram of proposed data structure changes to *Module 4: Where you live and work*
+## [DRAFT] Diagram of proposed data structure for *Module 4: Where you live and work* data mart.
 
 ```mermaid
 erDiagram
