@@ -10,6 +10,102 @@ Core logic of the transformations will be implemented in Python, but the Python 
 
 <img width="800" alt="pr2_dataflow_diagram" src="https://github.com/user-attachments/assets/3ddaabca-1b1c-467b-8d3d-9c6c181d0d91" />
 
+# PR2 Transformation Architecture
+
+## System Overview
+
+The PR2 transformation architecture is a modern, serverless ETL pipeline built on Google Cloud Platform that transforms Connect data from its raw form to a clean, standardized format for research purposes.
+
+## Architecture Diagram
+
+```mermaid
+flowchart LR
+    composer["Cloud Composer<br>(Apache Airflow)"] --> |triggers| cloudrun["Cloud Run<br>(PR2 Transformation Service)"]
+    cloudrun --> |executes SQL| bq["BigQuery"]
+    cloudrun --> |archives SQL| gcs["Cloud Storage"]
+    
+    subgraph "Data Flow"
+        source["FlatConnect<br>(Source Data)"] --> |transformation| staging["Staging Tables"]
+        staging --> |transformation| clean["CleanConnect<br>(Clean Data)"]
+    end
+    
+    bq --- source
+    bq --- staging
+    bq --- clean
+    
+    classDef primary fill:#4285F4,stroke:#4285F4,color:white
+    classDef secondary fill:#34A853,stroke:#34A853,color:white
+    classDef datasets fill:#F1F3F4,stroke:#DADCE0,color:black
+    
+    class composer,cloudrun primary
+    class bq,gcs secondary
+    class source,staging,clean datasets
+```
+
+## Core Components
+
+### Cloud Composer (Apache Airflow)
+- Orchestrates the entire ETL workflow
+- Schedules and triggers transformation steps in sequence
+- Manages dependencies between transformation tasks
+
+### Cloud Run (PR2 Transformation Service)
+- Hosts the transformation API endpoints
+- Processes transformation requests from Airflow
+- Generates optimized SQL for BigQuery execution
+
+### BigQuery
+- Functions as both source and destination for data
+- Executes the transformation SQL queries
+- Houses three key datasets:
+  - **FlatConnect**: Original source data
+  - **Staging Tables**: Intermediate processed data
+  - **CleanConnect**: Final cleaned data
+
+### Cloud Storage
+- Archives generated SQL queries for audit purposes
+- Provides transparency for transformation logic
+
+## Data Flow
+
+The transformation process follows a simple flow:
+
+1. **Orchestration**: Airflow DAG triggers API calls to the Cloud Run service
+2. **Transformation**: The service generates and executes SQL in BigQuery:
+   - Source data (FlatConnect) → Column cleaning → Row cleaning → Table merging
+   - Intermediate results are stored in staging tables
+   - Final results are stored in CleanConnect
+3. **Auditing**: Generated SQL is archived in Cloud Storage
+
+## API Endpoints
+
+The PR2 Transformation Service exposes the following RESTful endpoints:
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/heartbeat` | GET | Verifies service health |
+| `/clean_columns` | POST | Standardizes column names |
+| `/clean_rows` | POST | Transforms row values |
+| `/merge_table_versions` | POST | Combines multiple table versions |
+
+## Transformation Steps
+
+### 1. Clean Columns
+- Standardizes naming conventions for loop variables
+- Converts column names to lowercase (except Connect_ID)
+- Standardizes version tags by placing them at the end of column names
+- Splits or merges columns as needed
+
+### 2. Clean Rows
+- Converts binary "0"/"1" values to standardized concept IDs
+- Handles array unwrapping for singleton values
+
+### 3. Merge Table Versions
+- Performs full outer joins on tables with multiple versions
+- Uses COALESCE for combining common columns
+- Preserves columns unique to either source table
+
+This architecture provides a clean separation between orchestration (Airflow), processing logic (Cloud Run), and data storage (BigQuery), enabling a maintainable and scalable approach to ETL processing.
 ## Dataflow diagram for cleaning transformations
 
 ```mermaid
