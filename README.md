@@ -7,10 +7,6 @@ Documentation and Issue-tracking for the PR2 Data Pipeline.
 
 Core logic of the transformations will be implemented in Python, but the Python code will render SQL which will be executed in BigQuery. 
 
-## First Principles
-
-The PR2 transformation pipeline is built on several core principles that guide its design and implementation:
-
 ## High-level dataflow diagram
 
 <img width="800" alt="pr2_dataflow_diagram" src="https://github.com/user-attachments/assets/3ddaabca-1b1c-467b-8d3d-9c6c181d0d91" />
@@ -22,7 +18,7 @@ The PR2 transformation pipeline is built on several core principles that guide i
 The PR2 transformation architecture is a modern, serverless ETL pipeline built on Google Cloud Platform that transforms Connect data from its raw form to a clean, standardized format for research purposes.
 
 ## Architecture Diagram
-> Note: This currently just includes the cleaning transformations, not-deidentification or 
+> Note: This currently just includes the cleaning transformations, not-deidentification or aggregations. Each additional transformation should be a new endpoint in the API and should be called from a new "task" in the Airflow DAG.
 
 ```mermaid
 flowchart LR
@@ -49,9 +45,9 @@ flowchart LR
 ```
 ## First Principles
 
-The PR2 transformation pipeline is built on these core principles:
+The following first principles are used to guide development decisions:
 
-- **Unidirectional data flow**: Raw → clean, PII → de-identified, granular → aggregated
+- **Unidirectional data flow**: Raw → clean | PII → de-identified | granular → aggregated
 - **Modularity**: Small, discrete functions optimized for readability over efficiency
 - **Separation of concerns**: Group transformations by type, not by table (e.g., column-level, row/value-level, table-level)
 - **Parallelization**: Process multiple tables simultaneously
