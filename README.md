@@ -246,6 +246,10 @@ flowchart LR
     - take care to use coalesce appropriately to combine mutual columns
     - take care to include columns unique to either source table in the target table
 
+## Could we do better with a long-format response table for all surveys?
+
+![survey_data_model](https://github.com/user-attachments/assets/17c0ce7d-e842-42ef-bcb8-fc338ced990c)
+
 ## [DRAFT] Diagram of proposed data structure for *Module 4: Where you live and work* data mart.
 
 ```mermaid
