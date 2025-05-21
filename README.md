@@ -246,12 +246,15 @@ flowchart LR
     - take care to use coalesce appropriately to combine mutual columns
     - take care to include columns unique to either source table in the target table
 
+# Thoughts on the future state of PR2:
+
 ## Could we do better a response-centric relational data model? Yes!
 > This diagram does not represent a "fully-cooked" data model for the Connect data. It is a conceptual sketch that should be developed further through discussion with stakeholders.
 
 ![survey_data_model](https://github.com/user-attachments/assets/17c0ce7d-e842-42ef-bcb8-fc338ced990c)
 
 ## [DRAFT] Diagram of proposed data structure for *Module 4: Where you live and work* data mart.
+> This is also just a conceptual sketch, not a fully developed data model. 
 
 ```mermaid
 erDiagram
