@@ -15,10 +15,10 @@ Core logic of the transformations will be implemented in Python, but the Python 
 
 ## System Overview
 
-The PR2 transformation architecture is a modern, serverless ETL pipeline built on Google Cloud Platform that transforms Connect data from its raw form to a clean, standardized format for research purposes.
+The PR2 transformation architecture is a serverless ETL pipeline which is built on Google Cloud Platform that transforms Connect data from its raw form to a clean, standardized format for research purposes.
 
 ## Architecture Diagram
-> Note: This currently just includes the cleaning transformations, not-deidentification or aggregations. Each additional transformation should be a new endpoint in the API and should be called from a new "task" in the Airflow DAG.
+> *Note:* This currently just includes the cleaning transformations, not-deidentification or aggregations. Each additional transformation should be a new endpoint in the API and should be called from a new "task" in the Airflow DAG.
 
 ```mermaid
 flowchart LR
