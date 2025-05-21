@@ -247,6 +247,7 @@ flowchart LR
     - take care to include columns unique to either source table in the target table
 
 ## Could we do better a response-centric relational data model? Yes!
+> This diagram does not represent a "fully-cooked" data model for the Connect data. It is a conceptual sketch that should be developed further through discussion with stakeholders.
 
 ![survey_data_model](https://github.com/user-attachments/assets/17c0ce7d-e842-42ef-bcb8-fc338ced990c)
 
