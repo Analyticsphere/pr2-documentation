@@ -249,7 +249,7 @@ flowchart LR
 # Thoughts on the future state of PR2:
 
 ## Could we do better a response-centric relational data model? Yes!
-> This diagram does not represent a "fully-cooked" data model for the Connect data. It is a conceptual sketch that should be developed further through discussion with stakeholders. The nomenclature can be adjusted to use the terminology from our existing data dictionary as needed ("primary source", "secondary source", etc.).
+> This diagram does not represent a "fully-cooked" data model for the Connect data. It is a conceptual sketch that should be developed further through discussion with stakeholders. The nomenclature can be adjusted to use the terminology from our existing data dictionary as needed ("primary source", "secondary source", etc.). I suggest this type of normalized relational data model as a middle layer between our operational (raw) data and the data that are "curated" for the end-user. 
 
 ![survey_data_model](https://github.com/user-attachments/assets/17c0ce7d-e842-42ef-bcb8-fc338ced990c)
 
