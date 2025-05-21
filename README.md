@@ -68,7 +68,7 @@ The following first principles are used to guide development decisions:
 ### Cloud Run (PR2 Transformation Service)
 - Hosts the transformation API endpoints
 - Processes transformation requests from Airflow
-- Generates optimized SQL for BigQuery execution
+- Generates SQL for BigQuery execution
 
 ### BigQuery
 - Functions as both source and destination for data
