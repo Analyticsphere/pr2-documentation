@@ -52,7 +52,7 @@ The following first principles are used to guide development decisions:
 - **Separation of concerns**: Group transformations by type, not by table (e.g., column-level, row/value-level, table-level)
 - **Parallelization**: Process multiple tables simultaneously
 - **Configuration**: Parameterize constants and avoid hardcoding changeable elements
-- **Extensibility**: Design for discovering new requirements, avoid one-off solutions
+- **Extensibility**: Design to accomodate arbitrary future requirements, avoid one-off solutions
 - **SQL-first**: Generate SQL in python and execute in BigQuery via client library
 - **Auditiability and data provanence**: Archive SQL in GCS prior to execution for debugging and analyzing data provanance
 - **Serverless**: REST API endpoints for processing. Pass parameters via JSON from orchestrator
