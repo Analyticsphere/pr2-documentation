@@ -22,19 +22,17 @@ The PR2 transformation architecture is a serverless ETL pipeline which is built 
 
 ```mermaid
 flowchart LR
-    composer["Cloud Composer<br>(Apache Airflow)"] --> |triggers| cloudrun["Cloud Run<br>(PR2 Transformation Service)"]
-    cloudrun --> |executes SQL| bq["BigQuery"]
+    composer["Cloud Composer<br>(Apache Airflow)"] --> |triggers| cloudrun["Cloud Run<br>(PR2 Transformation API)"]
     cloudrun --> |archives SQL| gcs["Cloud Storage"]
     
-    subgraph "Data Flow"
+    subgraph "BigQuery"
+        direction LR
         source["FlatConnect<br>(Source Data)"] --> |transformation| staging["Staging Tables"]
         staging --> |transformation| clean["CleanConnect<br>(Clean Data)"]
     end
     
-    bq --- source
-    bq --- staging
-    bq --- clean
-    
+    cloudrun --> |executes SQL| BigQuery
+
     classDef primary fill:#4285F4,stroke:#4285F4,color:white
     classDef secondary fill:#34A853,stroke:#34A853,color:white
     classDef datasets fill:#F1F3F4,stroke:#DADCE0,color:black
@@ -43,6 +41,7 @@ flowchart LR
     class bq,gcs secondary
     class source,staging,clean datasets
 ```
+
 ## First Principles
 
 The following first principles are used to guide development decisions:
